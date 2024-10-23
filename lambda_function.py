@@ -35,4 +35,10 @@ def lambda_handler(event, context):
             else:
                 responseBody = {'message': 'To-do item not found'}
             body = responseBody
-            
+       
+        # GET: Mendapatkan semua to-do items
+        elif event['routeKey'] == "GET /todos":
+            response = table.scan()
+            items = response.get("Items", [])
+            responseBody = [{'id': item['id'], 'task': item['task'], 'status': item['status']} for item in items]
+            body = responseBody
