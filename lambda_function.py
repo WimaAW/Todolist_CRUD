@@ -17,7 +17,8 @@ def lambda_handler(event, context):
     }
 
     try:
-# DELETE: Menghapus to-do berdasarkan id
+
+        # DELETE: Menghapus to-do berdasarkan id
         if event['routeKey'] == "DELETE /todos/{id}":
             table.delete_item(
                 Key={'id': event['pathParameters']['id']}
