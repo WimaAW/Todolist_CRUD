@@ -17,3 +17,21 @@ def lambda_handler(event, context):
     }
 
     try:
+# DELETE: Menghapus to-do berdasarkan id
+        if event['routeKey'] == "DELETE /todos/{id}":
+            table.delete_item(
+                Key={'id': event['pathParameters']['id']}
+            )
+            body = {'message': 'Deleted to-do ' + event['pathParameters']['id']}
+
+        # GET: Mendapatkan satu to-do berdasarkan id
+        elif event['routeKey'] == "GET /todos/{id}":
+            response = table.get_item(
+                Key={'id': event['pathParameters']['id']}
+            )
+            body = response.get("Item", {})
+            if body:
+                responseBody = {'id': body['id'], 'task': body['task'], 'status': body['status']}
+            else:
+                responseBody = {'message': 'To-do item not found'}
+            body = responseBody
