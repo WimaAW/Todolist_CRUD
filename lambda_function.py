@@ -66,3 +66,16 @@ def lambda_handler(event, context):
                 ExpressionAttributeValues={":status": "completed"}
             )
             body = {'message': 'Updated to-do status to completed for ' + event['pathParameters']['id']}
+            
+    except KeyError:
+        statusCode = 400
+        body = {'message': 'Unsupported route: ' + event['routeKey']}
+    
+    # Menyiapkan response untuk dikembalikan
+    body = json.dumps(body)
+    res = {
+        "statusCode": statusCode,
+        "headers": headers,
+        "body": body
+    }
+    return res
