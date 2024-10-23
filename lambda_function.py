@@ -55,3 +55,14 @@ def lambda_handler(event, context):
                 }
             )
             body = 'Put item ' + task_id  # Mengubah response agar lebih sederhana
+
+
+        # POST: Memperbarui status to-do (misal: completed)
+        elif event['routeKey'] == "POST /todos/{id}/complete":
+            table.update_item(
+                Key={'id': event['pathParameters']['id']},
+                UpdateExpression="set #s = :status",
+                ExpressionAttributeNames={"#s": "status"},
+                ExpressionAttributeValues={":status": "completed"}
+            )
+            body = {'message': 'Updated to-do status to completed for ' + event['pathParameters']['id']}
