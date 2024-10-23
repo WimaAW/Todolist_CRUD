@@ -42,3 +42,16 @@ def lambda_handler(event, context):
             items = response.get("Items", [])
             responseBody = [{'id': item['id'], 'task': item['task'], 'status': item['status']} for item in items]
             body = responseBody
+
+        # PUT: Menambah atau memperbarui to-do item
+        elif event['routeKey'] == "PUT /todos":
+            requestJSON = json.loads(event['body'])
+            task_id = str(uuid.uuid4())  # Membuat ID unik untuk setiap tugas
+            table.put_item(
+                Item={
+                    'id': task_id,
+                    'task': requestJSON['task'],  # Deskripsi tugas dari request body
+                    'status': 'pending'  # Status default saat ditambahkan adalah pending
+                }
+            )
+            body = 'Put item ' + task_id  # Mengubah response agar lebih sederhana
